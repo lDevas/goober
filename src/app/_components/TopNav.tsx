@@ -14,7 +14,7 @@ const NextBreadcrumb = () => {
   return (
     <div>
       <ul className={containerClasses}>
-        <li className={listClasses}><Link href={'/'}>User List</Link></li>
+        <li className={listClasses}><Link href={'/'}>Goober</Link></li>
       </ul>
     </div>
   )

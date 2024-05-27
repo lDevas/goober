@@ -6,20 +6,20 @@ export default async function Home() {
   const riders = await api.rider.getAll();
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+    <main className="flex flex-col items-center">
       <h1>Goober Users</h1>
-      <div>
-        <h2>Drivers</h2>
+      <h2 className="mt-4">Drivers</h2>
+      <div className="flex space-between w-72 justify-between">
         {drivers.map((driver) => (
-          <Link href={`/driver/${driver.id}`} key={driver.id}>
+          <Link href={`/driver/${driver.id}`} key={driver.id} className="py2 px-3 border border-white rounded">
             {driver.name}
           </Link>
         ))}
       </div>
-      <div>
-        <h2>Riders</h2>
+      <h2 className="mt-4">Riders</h2>
+      <div className="flex space-between w-72 justify-between">
         {riders.map((rider) => (
-          <Link href={`/driver/${rider.id}`} key={rider.id}>
+          <Link href={`/rider/${rider.id}`} key={rider.id} className="py2 px-3 border border-white rounded">
             {rider.name}
           </Link>
         ))}
