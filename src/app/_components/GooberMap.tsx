@@ -21,6 +21,7 @@ export default function GooberMap({ origin, destination }: GooberMapProps) {
     useState<google.maps.DirectionsService>();
   const [directionsRenderer, setDirectionsRenderer] =
     useState<google.maps.DirectionsRenderer>();
+    
   // Initialize directions service and renderer
   useEffect(() => {
     if (!routesLibrary || !map) return;
@@ -28,11 +29,9 @@ export default function GooberMap({ origin, destination }: GooberMapProps) {
     setDirectionsRenderer(new routesLibrary.DirectionsRenderer({map}));
   }, [routesLibrary, map]);
 
-  console.log(map, routesLibrary, directionsService, directionsRenderer);
-  // Use directions service
+  // Use directions service 
   useEffect(() => {
     if (!directionsService || !directionsRenderer || !origin || !destination) return;
-    console.log('getting directions')
 
     directionsService
       .route({

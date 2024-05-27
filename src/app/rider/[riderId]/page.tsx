@@ -1,5 +1,4 @@
-import { getRider } from "~/server/queries";
-import RequestTrip from "../_components/requestTrip";
+import { api } from "~/trpc/server";
 
 interface RiderRouteProps {
   params: {
@@ -7,8 +6,8 @@ interface RiderRouteProps {
   }
 }
 
-export default function Rider({ params: { riderId } }: RiderRouteProps) {
-  const rider = getRider(riderId);
+export default async function Rider({ params: { riderId } }: RiderRouteProps) {
+  const rider = await api.rider.get({ riderId: parseInt(riderId) });
 
   if (!rider) {
     return "Loading";

@@ -20,5 +20,16 @@ export const driverRouter = createTRPCRouter({
           trips: true
         }
       })
-    ))
+    )),
+
+  toggleAvailable: publicProcedure
+    .input(z.object({ driverId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const driver = await ctx.db.query.drivers.findFirst({
+        where: eq(drivers.id, input.driverId),
+      });
+
+      await ctx.db.update(drivers).set({ available: !driver?.available }).where(eq(drivers.id, input.driverId));
+      return !driver?.available;
+    }),
 });
