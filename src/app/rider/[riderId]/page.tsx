@@ -1,4 +1,5 @@
-import { api } from "~/trpc/server";
+import { getRider } from "~/server/queries";
+import RequestTrip from "../_components/requestTrip";
 
 interface RiderRouteProps {
   params: {
@@ -6,15 +7,15 @@ interface RiderRouteProps {
   }
 }
 
-export default async function Rider({ params: { riderId } }: RiderRouteProps) {
-  const rider = await api.rider.get({ riderId: parseInt(riderId) });
+export default function Rider({ params: { riderId } }: RiderRouteProps) {
+  const rider = getRider(riderId);
 
   if (!rider) {
     return "Loading";
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+    <main className="flex flex-col items-center justify-center">
       <h1>Hello {rider.name}</h1>
     </main>
   );

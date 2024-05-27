@@ -12,16 +12,6 @@ export const metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-function Navigation() {
-  return (
-    <nav>
-      <Link href="/">
-        <a className="text-white">Users</a>
-      </Link>
-    </nav>
-  );
-}
-
 export default function RootLayout({
   children,
 }: {
