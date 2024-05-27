@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { api } from "~/trpc/server";
 
 export default async function Home() {
@@ -10,17 +11,17 @@ export default async function Home() {
       <div>
         <h2>Drivers</h2>
         {drivers.map((driver) => (
-          <div key={driver.id}>
+          <Link href={`/driver/${driver.id}`} key={driver.id}>
             {driver.name}
-          </div>
+          </Link>
         ))}
       </div>
       <div>
         <h2>Riders</h2>
         {riders.map((rider) => (
-          <div key={rider.id}>
+          <Link href={`/driver/${rider.id}`} key={rider.id}>
             {rider.name}
-          </div>
+          </Link>
         ))}
       </div>
     </main>

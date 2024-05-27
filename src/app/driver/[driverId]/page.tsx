@@ -1,7 +1,13 @@
 import { api } from "~/trpc/server";
 
-export default async function Driver() {
-  const driver = await api.driver.get({ driverId: 2 });
+interface DriverRouteProps {
+  params: {
+    driverId: string;
+  }
+}
+
+export default async function Driver({ params: { driverId } }: DriverRouteProps) {
+  const driver = await api.driver.get({ driverId: parseInt(driverId) });
 
   if (!driver) {
     return "Loading";

@@ -1,7 +1,13 @@
 import { api } from "~/trpc/server";
 
-export default async function Rider() {
-  const rider = await api.rider.get({ riderId: 1 });
+interface RiderRouteProps {
+  params: {
+    riderId: string;
+  }
+}
+
+export default async function Rider({ params: { riderId } }: RiderRouteProps) {
+  const rider = await api.rider.get({ riderId: parseInt(riderId) });
 
   if (!rider) {
     return "Loading";
