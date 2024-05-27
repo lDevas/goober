@@ -1,9 +1,11 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   index,
+  integer,
+  pgEnum,
   pgTableCreator,
   serial,
   timestamp,
@@ -18,8 +20,8 @@ import {
  */
 export const createTable = pgTableCreator((name) => `goober_${name}`);
 
-export const posts = createTable(
-  "post",
+export const riders = createTable(
+  "rider",
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
@@ -27,10 +29,50 @@ export const posts = createTable(
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
-  },
-  (example) => ({
-    nameIndex: index("name_idx").on(example.name),
-  })
+  }
 );
+export const ridersRelations = relations(riders, ({ many }) => ({
+  trips: many(trips),
+}));
+
+export const drivers = createTable(
+  "driver",
+  {
+    id: serial("id").primaryKey(),
+    name: varchar("name", { length: 256 }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt", { withTimezone: true }),
+  }
+);
+export const driversRelations = relations(drivers, ({ many }) => ({
+  trips: many(trips),
+}));
 
 
+export const tripStatus = pgEnum('trip_status', ['pending', 'in progress', 'canceled-by-rider', 'canceled-by-driver', 'completed']);
+
+export const trips = createTable(
+  "trip",
+  {
+    id: serial("id").primaryKey(),
+    status: tripStatus('trip_status'),
+    riderId: integer('rider_id').notNull(),
+    driverId: integer('driver_id'),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt", { withTimezone: true }),
+  }
+);
+export const tripsRelations = relations(trips, ({ one }) => ({
+  rider: one(riders, {
+    fields: [trips.riderId],
+    references: [riders.id],
+  }),
+  driver: one(drivers, {
+    fields: [trips.driverId],
+    references: [drivers.id],
+  }),
+}));
