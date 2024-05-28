@@ -31,19 +31,21 @@ export default function GooberMap({ origin, destination, setDistance }: GooberMa
 
   // Use directions service 
   useEffect(() => {
-    if (!directionsService || !directionsRenderer || !origin || !destination) return;
-
-    directionsService
-      .route({
+    async function renderRoute() {
+      if (!directionsService || !directionsRenderer || !origin || !destination) return;
+  
+      const response = await directionsService.route({
         origin: origin,
         destination: destination,
         travelMode: google.maps.TravelMode.DRIVING,
         provideRouteAlternatives: false
-      })
-      .then(response => {
-        directionsRenderer.setDirections(response);
-        setDistance(response.routes[0]?.legs[0]?.distance?.value!);
       });
+      directionsRenderer.setDirections(response);
+      if (!response.routes[0]?.legs[0]?.distance) return;
+      setDistance(response.routes[0].legs[0].distance.value);
+    }
+
+    void renderRoute();
   }, [directionsService, directionsRenderer, origin, destination, setDistance]);
 
   // Recenter and adjust zoom to fit origin and destination

@@ -1,20 +1,13 @@
 "use client"
-import React, { ReactNode } from 'react'
 
-import { usePathname } from 'next/navigation'
+import React from 'react'
 import Link from 'next/link'
 
 const NextBreadcrumb = () => {
-  const paths = usePathname()
-  const pathNames = paths.split('/').filter(path => path)
-  const containerClasses = 'flex py-5';
-  const listClasses = 'hover:underline mx-2 font-bold';
-  const activeClasses = 'flex py-5';
-
   return (
     <div>
-      <ul className={containerClasses}>
-        <li className={listClasses}><Link href={'/'}>Goober</Link></li>
+      <ul className={'flex py-5'}>
+        <li className={'hover:underline mx-2 font-bold'}><Link href={'/'}>Goober</Link></li>
       </ul>
     </div>
   )

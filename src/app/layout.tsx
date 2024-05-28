@@ -3,7 +3,6 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import Link from "next/link";
 import TopNav from "./_components/TopNav";
 
 export const metadata = {

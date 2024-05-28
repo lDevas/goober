@@ -19,29 +19,32 @@ export default function RequestTrip({ riderId }: RequestTripProps) {
   const [distance, setDistance] = useState<number>(0);
   const getTripCost = api.trip.getTripCost.useQuery({ distance }, { enabled: !!distance });
   useEffect(() => {
-    if (distance) {
-      getTripCost.refetch();
+    async function refetch() {
+      if (distance) {
+        await getTripCost.refetch();
+      }
     }
-  }, [distance]);
+    void refetch();
+  }, [getTripCost, distance]);
   
   const toggleAvailable = api.trip.requestTrip.useMutation();
   const handleSubmit = async () => {
+    if (!origin || !destination || !getTripCost.data) return;
     await toggleAvailable.mutateAsync(
       {
         riderId,
-        originLat: origin?.lat!,
-        originLng: origin?.lng!,
-        destinationLat: destination?.lat!,
-        destinationLng: destination?.lng!,
-        cost: getTripCost.data!
+        originLat: origin?.lat,
+        originLng: origin?.lng,
+        destinationLat: destination?.lat,
+        destinationLng: destination?.lng,
+        cost: getTripCost.data
       }
     );
     router.refresh();
   }
 
-
   return (
-    <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || ''}>
+    <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''}>
       <form action={handleSubmit} className="flex flex-col">
         Origin:
         <PlacesAutocomplete onPlaceSelect={setOrigin} />
@@ -58,7 +61,7 @@ export default function RequestTrip({ riderId }: RequestTripProps) {
         <SubmitButton
           className="mx-auto mt-2 py-2 px-3 border border-white rounded"
           text="Request trip"
-          disabled={!getTripCost.data}
+          disabled={!origin || !destination || !getTripCost.data}
         />
       </form>
     </APIProvider>

@@ -1,6 +1,6 @@
 'use client'
 
-import { api } from "~/trpc/server";
+import type { api } from "~/trpc/server";
 
 interface CurrentTripProps {
   trip: Awaited<ReturnType<typeof api.trip.getCurrentTrip>>;
