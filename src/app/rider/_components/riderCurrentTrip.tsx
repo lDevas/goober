@@ -5,11 +5,11 @@ import GooberMap from "~/app/_components/GooberMap";
 import SubmitButton from "~/app/_components/SubmitButton";
 import type { api } from "~/trpc/server";
 
-interface CurrentTripProps {
+interface RiderCurrentTripProps {
   trip: Exclude<Awaited<ReturnType<typeof api.trip.getRiderCurrentTrip>>, undefined>;
 }
 
-export default function CurrentTrip(props: CurrentTripProps) {
+export default function RiderCurrentTrip(props: RiderCurrentTripProps) {
   const { trip } = props;
   const { originLat, originLng, destinationLat, destinationLng, cost, status } = trip;
   return (

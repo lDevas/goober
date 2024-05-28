@@ -1,6 +1,6 @@
 import { api } from "~/trpc/server";
 import RequestTrip from "../_components/requestTrip";
-import CurrentTrip from "../_components/currentTrip";
+import RiderCurrentTrip from "../_components/riderCurrentTrip";
 
 interface RiderRouteProps {
   params: {
@@ -18,7 +18,7 @@ export default async function Rider({ params }: RiderRouteProps) {
     <main className="flex flex-col items-center justify-center">
       <h1>Hello {rider?.name}</h1>
       {currentTrip
-        ? <CurrentTrip trip={currentTrip}/>
+        ? <RiderCurrentTrip trip={currentTrip}/>
         : <RequestTrip riderId={riderId}/>
       }
     </main>
