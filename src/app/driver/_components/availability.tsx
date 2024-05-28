@@ -1,34 +1,15 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import { useFormStatus } from "react-dom";
+import SubmitButton from "~/app/_components/SubmitButton";
 import { api } from "~/trpc/react";
-
-interface SubmitButtonProps {
-  className: string;
-  text: string;
-}
-
-const SubmitButton = ({ className, text }: SubmitButtonProps) => {
-  const { pending } = useFormStatus();
-
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className={className}
-    >
-      {pending ? 'Loading...' : text}
-    </button>
-  );
-}
 
 interface AvailablilityProps {
   driver: any
 }
 
 export default function Availablility({ driver }: AvailablilityProps) {
-  const router = useRouter()
+  const router = useRouter();
   const toggleAvailable = api.driver.toggleAvailable.useMutation();
   const handleSubmit = async () => {
     await toggleAvailable.mutateAsync({ driverId: driver.id });

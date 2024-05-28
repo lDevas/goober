@@ -33,7 +33,7 @@ export default function PlacesAutocomplete ({onPlaceSelect}: AutoCompleteProps) 
 
   return (
     <div className="autocomplete-container">
-      <input ref={inputRef} className="bg-black border border-white rounded p-1"/>
+      <input ref={inputRef} className="w-full bg-black border border-white rounded p-1"/>
     </div>
   );
 };

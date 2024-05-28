@@ -4,7 +4,7 @@
 import { relations, sql } from "drizzle-orm";
 import {
   boolean,
-  index,
+  doublePrecision,
   integer,
   pgEnum,
   pgTableCreator,
@@ -59,9 +59,14 @@ export const trips = createTable(
   "trip",
   {
     id: serial("id").primaryKey(),
-    status: tripStatus('trip_status'),
+    status: tripStatus('trip_status').default('pending'),
     riderId: integer('rider_id').notNull(),
     driverId: integer('driver_id'),
+    originLat: doublePrecision('origin_lat'),
+    originLng: doublePrecision('origin_lng'),
+    destinationLat: doublePrecision('destination_lat'),
+    destinationLng: doublePrecision('destination_lng'),
+    cost: doublePrecision('cost'),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

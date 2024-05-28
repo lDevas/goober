@@ -1,8 +1,7 @@
 'use client';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
-  APIProvider,
   useMapsLibrary,
   useMap,
   Map as GoogleMap,
@@ -12,9 +11,10 @@ import {
 interface GooberMapProps {
   origin: google.maps.LatLngLiteral | undefined;
   destination: google.maps.LatLngLiteral | undefined;
+  setDistance: (distance: number) => void;
 }
 
-export default function GooberMap({ origin, destination }: GooberMapProps) {
+export default function GooberMap({ origin, destination, setDistance }: GooberMapProps) {
   const map = useMap();
   const routesLibrary = useMapsLibrary('routes');
   const [directionsService, setDirectionsService] =
@@ -42,10 +42,23 @@ export default function GooberMap({ origin, destination }: GooberMapProps) {
       })
       .then(response => {
         directionsRenderer.setDirections(response);
+        setDistance(response.routes[0]?.legs[0]?.distance?.value!);
       });
+  }, [directionsService, directionsRenderer, origin, destination, setDistance]);
 
-    return () => directionsRenderer.setMap(null);
-  }, [directionsService, directionsRenderer, origin, destination]);
+  // Recenter and adjust zoom to fit origin and destination
+  useEffect(() => {
+    if (!map || (!origin && !destination)) return;
+
+    const bounds = new google.maps.LatLngBounds();
+    if (origin) {
+      bounds.extend(origin);
+    }
+    if (destination) {
+      bounds.extend(destination);
+    }
+    map.fitBounds(bounds);
+  }, [map, origin, destination])
   
   return (
     <GoogleMap
@@ -55,6 +68,7 @@ export default function GooberMap({ origin, destination }: GooberMapProps) {
       fullscreenControl={false}
       className='h-full w-full'
       disableDefaultUI
+      maxZoom={16}
     >
       {origin && <Marker position={origin} />}
       {destination && <Marker position={destination} />}
