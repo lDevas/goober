@@ -13,6 +13,8 @@ export default async function Driver({ params }: DriverRouteProps) {
   const driverPromise = api.driver.get({ driverId });
   const currentTripPromise = api.trip.getDriverCurrentTrip({ driverId });
   const [driver, currentTrip] = await Promise.all([driverPromise, currentTripPromise]);
+  
+  if (!driver) return null;
 
   return (
     <main className="flex flex-col items-center justify-center">

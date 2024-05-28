@@ -8,12 +8,13 @@ import GooberMap from "~/app/_components/GooberMap";
 import PlacesAutocomplete from "~/app/_components/PlacesAutocomplete";
 import SubmitButton from "~/app/_components/SubmitButton";
 import { api } from "~/trpc/react";
+import type { api as serverApi } from "~/trpc/server";
 
 interface RequestTripProps {
-  riderId: number;
+  rider: Exclude<Awaited<ReturnType<typeof serverApi.rider.get>>, undefined>;
 }
 
-export default function RequestTrip({ riderId }: RequestTripProps) {
+export default function RequestTrip({ rider }: RequestTripProps) {
   const router = useRouter();
   const [origin, setOrigin] = useState<google.maps.LatLngLiteral | undefined>(undefined);
   const [destination, setDestination] = useState<google.maps.LatLngLiteral | undefined>(undefined);
@@ -35,7 +36,7 @@ export default function RequestTrip({ riderId }: RequestTripProps) {
     try {
       await requestTrip.mutateAsync(
         {
-          riderId,
+          riderId: rider.id,
           originLat: origin?.lat,
           originLng: origin?.lng,
           destinationLat: destination?.lat,

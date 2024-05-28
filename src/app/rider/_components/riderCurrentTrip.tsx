@@ -2,6 +2,7 @@
 
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import GooberMap from "~/app/_components/GooberMap";
 import SubmitButton from "~/app/_components/SubmitButton";
 import { api } from "~/trpc/react";
@@ -20,6 +21,14 @@ export default function RiderCurrentTrip(props: RiderCurrentTripProps) {
     await cancelRide.mutateAsync({ tripId: trip.id });
     router.refresh();
   }
+  useEffect(() => {
+    const polling = () => {
+      router.refresh();
+    }
+    const interval = setInterval(polling, 3000);
+
+    return () => clearInterval(interval);
+  }, [router]);
 
   return (
     <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''}>
