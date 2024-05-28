@@ -11,7 +11,7 @@ import {
 interface GooberMapProps {
   origin: google.maps.LatLngLiteral | undefined;
   destination: google.maps.LatLngLiteral | undefined;
-  setDistance: (distance: number) => void;
+  setDistance?: (distance: number) => void;
 }
 
 export default function GooberMap({ origin, destination, setDistance }: GooberMapProps) {
@@ -41,7 +41,7 @@ export default function GooberMap({ origin, destination, setDistance }: GooberMa
         provideRouteAlternatives: false
       });
       directionsRenderer.setDirections(response);
-      if (!response.routes[0]?.legs[0]?.distance) return;
+      if (!response.routes[0]?.legs[0]?.distance || !setDistance) return;
       setDistance(response.routes[0].legs[0].distance.value);
     }
 
