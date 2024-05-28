@@ -3,7 +3,7 @@
 import type { api } from "~/trpc/server";
 
 interface CurrentTripProps {
-  trip: Awaited<ReturnType<typeof api.trip.getCurrentTrip>>;
+  trip: Awaited<ReturnType<typeof api.trip.getRiderCurrentTrip>>;
 }
 
 export default function CurrentTrip(props: CurrentTripProps) {

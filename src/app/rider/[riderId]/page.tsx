@@ -11,7 +11,7 @@ interface RiderRouteProps {
 export default async function Rider({ params }: RiderRouteProps) {
   const riderId: number = parseInt(params.riderId);
   const riderPromise = api.rider.get({ riderId });
-  const currentTripPromise = api.trip.getCurrentTrip({ riderId });
+  const currentTripPromise = api.trip.getRiderCurrentTrip({ riderId });
   const [rider, currentTrip] = await Promise.all([riderPromise, currentTripPromise]);
 
   return (

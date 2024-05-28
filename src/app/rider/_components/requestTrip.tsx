@@ -1,5 +1,6 @@
 'use client'
 
+import { TRPCClientError } from "@trpc/client";
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -8,7 +9,7 @@ import PlacesAutocomplete from "~/app/_components/PlacesAutocomplete";
 import SubmitButton from "~/app/_components/SubmitButton";
 import { api } from "~/trpc/react";
 
-interface RequestTripProps { 
+interface RequestTripProps {
   riderId: number;
 }
 
@@ -17,6 +18,7 @@ export default function RequestTrip({ riderId }: RequestTripProps) {
   const [origin, setOrigin] = useState<google.maps.LatLngLiteral | undefined>(undefined);
   const [destination, setDestination] = useState<google.maps.LatLngLiteral | undefined>(undefined);
   const [distance, setDistance] = useState<number>(0);
+  const [error, setError] = useState<string | null>(null);
   const getTripCost = api.trip.getTripCost.useQuery({ distance }, { enabled: !!distance });
   useEffect(() => {
     async function refetch() {
@@ -26,22 +28,29 @@ export default function RequestTrip({ riderId }: RequestTripProps) {
     }
     void refetch();
   }, [getTripCost, distance]);
-  
+
   const toggleAvailable = api.trip.requestTrip.useMutation();
   const handleSubmit = async () => {
     if (!origin || !destination || !getTripCost.data) return;
-    await toggleAvailable.mutateAsync(
-      {
-        riderId,
-        originLat: origin?.lat,
-        originLng: origin?.lng,
-        destinationLat: destination?.lat,
-        destinationLng: destination?.lng,
-        cost: getTripCost.data
+    try {
+      await toggleAvailable.mutateAsync(
+        {
+          riderId,
+          originLat: origin?.lat,
+          originLng: origin?.lng,
+          destinationLat: destination?.lat,
+          destinationLng: destination?.lng,
+          cost: getTripCost.data
+        }
+      );
+    } catch (error) {
+      if (error instanceof TRPCClientError) {
+        setError(error.message)
       }
-    );
+    }
     router.refresh();
   }
+  console.log(error);
 
   return (
     <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? ''}>
@@ -63,6 +72,7 @@ export default function RequestTrip({ riderId }: RequestTripProps) {
           text="Request trip"
           disabled={!origin || !destination || !getTripCost.data}
         />
+        {error && <span className="mt-2 align-center text-red-500">{error}</span>}
       </form>
     </APIProvider>
   );
