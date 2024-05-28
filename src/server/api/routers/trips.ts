@@ -45,6 +45,30 @@ export const tripRouter = createTRPCRouter({
         )
       })
     )),
+  
+  driverAcceptRide: publicProcedure
+    .input(z.object({ tripId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.update(trips).set({ status: 'in progress' }).where(eq(trips.id, input.tripId));
+    }),
+
+  driverCancelRide: publicProcedure
+    .input(z.object({ tripId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.update(trips).set({ status: 'canceled by driver' }).where(eq(trips.id, input.tripId));
+    }),
+
+  driverCompleteRide: publicProcedure
+    .input(z.object({ tripId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.update(trips).set({ status: 'completed' }).where(eq(trips.id, input.tripId));
+    }),
+
+  riderCancelRide: publicProcedure
+    .input(z.object({ tripId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.update(trips).set({ status: 'canceled by rider' }).where(eq(trips.id, input.tripId));
+    }),
 
   requestTrip: publicProcedure
     .input(requestTripInput)

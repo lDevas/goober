@@ -6,15 +6,14 @@ import { api } from "~/trpc/react";
 import type { api as serverApi } from "~/trpc/server";
 
 interface AvailablilityProps {
-  driver: Awaited<ReturnType<typeof serverApi.driver.get>>;
+  driver: Exclude<Awaited<ReturnType<typeof serverApi.driver.get>>, undefined>;
 }
 
 export default function Availablility({ driver }: AvailablilityProps) {
   const router = useRouter();
   const toggleAvailable = api.driver.toggleAvailable.useMutation();
   const handleSubmit = async () => {
-    if (!driver) return;
-    await toggleAvailable.mutateAsync({ driverId: driver?.id });
+    await toggleAvailable.mutateAsync({ driverId: driver.id });
     router.refresh();
   }
 

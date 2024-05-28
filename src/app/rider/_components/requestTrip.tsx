@@ -29,11 +29,11 @@ export default function RequestTrip({ riderId }: RequestTripProps) {
     void refetch();
   }, [getTripCost, distance]);
 
-  const toggleAvailable = api.trip.requestTrip.useMutation();
+  const requestTrip = api.trip.requestTrip.useMutation();
   const handleSubmit = async () => {
     if (!origin || !destination || !getTripCost.data) return;
     try {
-      await toggleAvailable.mutateAsync(
+      await requestTrip.mutateAsync(
         {
           riderId,
           originLat: origin?.lat,

@@ -52,7 +52,7 @@ export const driversRelations = relations(drivers, ({ many }) => ({
   trips: many(trips),
 }));
 
-export const tripStatus = pgEnum('trip_status', ['pending', 'in progress', 'canceled-by-rider', 'canceled-by-driver', 'completed']);
+export const tripStatus = pgEnum('trip_status', ['pending', 'in progress', 'canceled by rider', 'canceled by driver', 'completed']);
 
 export const trips = createTable(
   "trip",
