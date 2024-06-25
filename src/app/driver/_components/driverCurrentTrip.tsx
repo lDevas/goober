@@ -3,7 +3,7 @@
 import { APIProvider } from "@vis.gl/react-google-maps";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import GooberMap from "~/app/_components/GooberMap";
+import GooberMap from "~/app/_components/maps/GooberMap";
 import SubmitButton from "~/app/_components/SubmitButton";
 import { api } from "~/trpc/react";
 import type { api as serverApi } from "~/trpc/server";
