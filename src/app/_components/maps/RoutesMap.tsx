@@ -10,18 +10,20 @@ import { useRoute } from "./useRoute";
 import { useClusterer } from "./useClusterer";
 
 interface RoutesMapProps {
-  destinations: (google.maps.LatLngLiteral & { title: string })[];
+  destinations: (google.maps.LatLngLiteral & { assignedDriverId: string; title: string })[];
+  driverIds: string[];
 }
 
 const MAP_ID = "de8b18fc9e13625";
 
 export default function RoutesMap({
   destinations,
+  driverIds,
 }: RoutesMapProps) {
   const map = useMap(MAP_ID);
 
   // Show the route
-  useRoute(map, destinations);
+  useRoute({ map, destinations, driverIds });
 
   // Recenter and adjust zoom to fit origin and destination
   useFitDestinations(map, destinations);
