@@ -36,7 +36,7 @@ export const useRoute = ({ map, destinations, driverIds }: useRoutePropTypes) =>
         const driverDestinations = destinations.filter((destination) => destination.assignedDriverId === driverId);
         const numChunks = Math.ceil(driverDestinations.length / MAX_WAYPOINTS);
         const chunkResponses = Array.from(Array(numChunks), (_, index) => {
-          const start = index * MAX_WAYPOINTS;
+          const start = index === 0 ? 0 : index * MAX_WAYPOINTS - 1;
           const end = Math.min((index + 1) * MAX_WAYPOINTS, driverDestinations.length);
           const chunk = driverDestinations.slice(start, end);
 
