@@ -29,7 +29,7 @@ export default function RoutesMap({
   useFitDestinations(map, destinations);
 
   // CLuster 
-  useClusterer(map, destinations);
+  useClusterer(map, destinations, driverIds);
 
   return (
     <GoogleMap

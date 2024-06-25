@@ -1,8 +1,13 @@
 import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useEffect, useState } from "react";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
+import { mapColors } from "./constants";
 
-export const useClusterer = (map: google.maps.Map | null, destinations: (google.maps.LatLngLiteral & { title: string })[]) => {
+export const useClusterer = (
+  map: google.maps.Map | null,
+  destinations: (google.maps.LatLngLiteral & { title: string, assignedDriverId: string })[],
+  driverIds: string[],
+) => {
   const markerLibrary = useMapsLibrary("marker");
 
   const [clustering, setClustering] = useState<MarkerClusterer>();
@@ -25,8 +30,8 @@ export const useClusterer = (map: google.maps.Map | null, destinations: (google.
         const pinGlyph = new PinElement({
           glyph: `${i+1}`,
           glyphColor: "white",
-          background: "blue",
-          borderColor: "black",
+          background: mapColors[driverIds.findIndex((driverId) => destination.assignedDriverId === driverId)],
+          borderColor: "white",
           scale: 0.8
         })
         const marker = new AdvancedMarkerElement({
