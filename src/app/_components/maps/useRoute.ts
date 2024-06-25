@@ -13,12 +13,18 @@ interface useRoutePropTypes {
 export const useRoute = ({ map, destinations, driverIds }: useRoutePropTypes) => {
   const routesLibrary = useMapsLibrary("routes");
   const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService>();
+  const [directionsRenderers, setDirectionsRenderers] = useState<google.maps.DirectionsRenderer[]>();
 
   // Initialize directions service and renderer
   useEffect(() => {
     if (!routesLibrary || !map) return;
     setDirectionsService(new routesLibrary.DirectionsService());
   }, [routesLibrary, map]);
+
+  // remove previously renrered routes
+  useEffect(() => {
+    return () => directionsRenderers?.forEach((directionsRenderer) => directionsRenderer.setMap(null));
+  }, [directionsRenderers]);
 
   // Use directions service
   useEffect(() => {
@@ -63,10 +69,13 @@ export const useRoute = ({ map, destinations, driverIds }: useRoutePropTypes) =>
       });
       const routesByDriver = await Promise.all(routesByDriverPromises)
 
-      routesByDriver.forEach((driverRoute, index) => {
+      const directionsRenderers = routesByDriver.map((driverRoute, index) => {
         const directionsRenderer = new routesLibrary.DirectionsRenderer({ map, suppressMarkers: true, polylineOptions: { strokeColor: mapColors[index] } });
         directionsRenderer.setDirections(driverRoute.mergedRoutes as google.maps.DirectionsResult);
-      })
+        return directionsRenderer;
+      });
+
+      setDirectionsRenderers(directionsRenderers)
     }
 
     void renderRoute();
