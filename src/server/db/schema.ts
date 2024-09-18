@@ -52,7 +52,7 @@ export const driversRelations = relations(drivers, ({ many }) => ({
   trips: many(trips),
 }));
 
-export const tripStatus = pgEnum('trip_status', ['pending', 'in progress', 'canceled by rider', 'canceled by driver', 'completed']);
+export const tripStatus = pgEnum('trip_status', ['pending', 'in progress', 'canceled by rider', 'canceled by driver', 'complete', 'no driver available']);
 
 export const trips = createTable(
   "trip",
@@ -72,6 +72,7 @@ export const trips = createTable(
     updatedAt: timestamp("updatedAt", { withTimezone: true }),
   }
 );
+
 export const tripsRelations = relations(trips, ({ one }) => ({
   rider: one(riders, {
     fields: [trips.riderId],
@@ -82,3 +83,29 @@ export const tripsRelations = relations(trips, ({ one }) => ({
     references: [drivers.id],
   }),
 }));
+
+export const canceledPendingTrips = createTable(
+  "canceled_pending_trips",
+  {
+    id: serial("id").primaryKey(),
+    driverId: integer('driver_id'),
+    tripId: integer('trip_id'),
+    canceledAt: timestamp('canceled_at', { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updatedAt", { withTimezone: true }),
+  }
+);
+
+export const canceledPendingTripsRelations = relations(canceledPendingTrips, ({ one }) => ({
+  driver: one(drivers, {
+    fields: [canceledPendingTrips.driverId],
+    references: [drivers.id],
+  }),
+  trip: one(trips, {
+    fields: [canceledPendingTrips.tripId],
+    references: [trips.id],
+  })
+}))
