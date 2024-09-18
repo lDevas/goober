@@ -2,7 +2,7 @@
 
 **Goober** is a Uber-like web app that offers a ride-share taxi service.
 
-This application was created as a code challenge, the application is hosted at: https://goober-beryl.vercel.app/ using [Vercel](https://vercel.com/) for server and database hosting.
+This application was created as a code challenge.
 
 ## Requirements
 
